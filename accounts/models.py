@@ -15,5 +15,5 @@ class User(AbstractUser):
     username = models.CharField(max_length=20, null=True, blank=True, unique=True)
     bio = models.CharField(max_length=20, null=True, blank=True, unique=True)
 
-    USERNAME_FIELD = ['phone']
+    USERNAME_FIELD = 'phone'
     objects = MyUserManager()
