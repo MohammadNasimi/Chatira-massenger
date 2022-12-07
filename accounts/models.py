@@ -14,8 +14,19 @@ class MyUserManager(UserManager):
 
 class User(AbstractUser):
     phone = models.CharField(max_length=11, null=True, blank=True, unique=True)
-    username = models.CharField(max_length=20, null=True, blank=True, unique=True)
-    bio = models.CharField(max_length=20, null=True, blank=True, unique=True)
-
     USERNAME_FIELD = 'phone'
     objects = MyUserManager()
+    
+    def __str__(self) -> str:
+        return f'{self.phone}'
+    
+class profile(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    username = models.CharField(max_length=20, null=False, blank=False, unique=True)
+    bio = models.TextField(max_length=100, null=True, blank=True, unique=True)
+    profile_pic = models.ImageField(null=True,default=None,upload_to="profile_picture",
+                                    max_length=100)
+    created = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self) -> str:
+        return f'{self.user.phone ,self.username}'
