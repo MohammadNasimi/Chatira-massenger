@@ -7,6 +7,8 @@ from django.contrib.auth.models import AbstractUser,UserManager
 class MyUserManager(UserManager):
     def create_superuser(self, username=None, email=None, password=None, **extra_fields):
         username = extra_fields['phone']
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
         return self._create_user(username, email, password, **extra_fields)
 
 
