@@ -1,5 +1,5 @@
 from django.db import models
-
+from core.models import BaseModel
 # Create your models here.
 from django.contrib.auth.models import AbstractUser,UserManager
 
@@ -20,13 +20,12 @@ class User(AbstractUser):
     def __str__(self) -> str:
         return f'{self.phone}'
     
-class profile(models.Model):
+class profile(BaseModel):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     username = models.CharField(max_length=20, null=False, blank=False, unique=True)
     bio = models.TextField(max_length=100, null=True, blank=True, unique=True)
     profile_pic = models.ImageField(null=True,default=None,upload_to="profile_picture",
                                     max_length=100)
-    created = models.DateTimeField(auto_now_add=True)
     
     def __str__(self) -> str:
         return f'{self.user.phone ,self.username}'
