@@ -3,6 +3,9 @@ from core.models import BaseModel
 # Create your models here.
 from django.contrib.auth.models import AbstractUser,UserManager
 
+# json field 
+from json_field import JSONField
+
 
 class MyUserManager(UserManager):
     def create_superuser(self, username=None, email=None, password=None, **extra_fields):
@@ -29,3 +32,9 @@ class profile(BaseModel):
     
     def __str__(self) -> str:
         return f'{self.user.phone ,self.username}'
+    
+class user_meta(BaseModel):
+    profile = models.OneToOneField(profile,on_delete=models.CASCADE)
+    personal_theme = jsonfield.JSONField()
+    status = models.BooleanField(null=False,blank=True)
+    last_seen =models.DateTimeField(auto_now_add=True)
