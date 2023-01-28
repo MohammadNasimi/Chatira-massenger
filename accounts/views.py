@@ -2,19 +2,20 @@
 from rest_framework import generics,status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 # jwt
 from rest_framework_simplejwt.tokens import RefreshToken
 #account 
 from accounts.models import User,profile,user_meta
+from accounts.permissions import profile_user_meta_permissions 
 #serializer
-from accounts.serializer import LoginSerializer
+from accounts.serializer import *
 #django auth 
 from django.contrib.auth import authenticate
 
 
 # log in
 class LoginView(generics.GenericAPIView):
-    queryset = User.objects.all()
     serializer_class = LoginSerializer
     def post(self, request, *args, **kwargs):
         if "password" not in request.data or "phone" not in request.data:
@@ -32,11 +33,15 @@ class LoginView(generics.GenericAPIView):
             token=get_token(user)
             data['refresh']=token['refresh']
             data['access']=token['access']
+            profile_id =profile.objects.get(user_id = user.id).id
+            data['profile_id'] = profile_id
+            data['user_meta_id'] = user_meta.objects.get(profile_id = profile_id).id
+
             return Response(data, status=status.HTTP_200_OK)
         else:
             return Response({'user':'wrong username or password'}, status=status.HTTP_200_OK)
 
-
+# register
 class RegisterView(APIView):
     def post(self, request, *args, **kwargs):
         email= request.data.get("email" ,"")
@@ -57,3 +62,9 @@ class RegisterView(APIView):
             return Response({"detail"  : "phone exist"} , status=status.HTTP_400_BAD_REQUEST)
         
         return Response(request.data, status=status.HTTP_201_CREATED)
+    
+# profile detail and update 
+class ProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes =[IsAuthenticated,profile_user_meta_permissions]
+    serializer_class = ProfileSerializer
+    queryset = profile.objects.all()
