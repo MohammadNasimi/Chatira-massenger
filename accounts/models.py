@@ -25,8 +25,8 @@ class User(AbstractUser):
     
 class profile(BaseModel):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
-    username = models.CharField(max_length=20, null=False, blank=False, unique=True)
-    bio = models.TextField(max_length=100, null=True, blank=True, unique=True)
+    username = models.CharField(max_length=20, null=True, blank=True, unique=True)
+    bio = models.TextField(max_length=100, null=True, blank=True)
     profile_pic = models.ImageField(null=True,default=None,upload_to="profile_picture",
                                     max_length=100)
     
@@ -40,5 +40,8 @@ def personal_theme_defualt():
 class user_meta(BaseModel):
     profile = models.OneToOneField(profile,on_delete=models.CASCADE)
     personal_theme = JSONField("personal_theme", default=personal_theme_defualt)
-    status = models.BooleanField(null=False,blank=True)
+    status = models.BooleanField(null=False,blank=False,default=False)
     last_seen =models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self) -> str:
+        return f'{self.profile.user.phone ,self.last_seen}'
