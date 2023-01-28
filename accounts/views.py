@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 #account 
 from accounts.models import User,profile,user_meta
-from accounts.permissions import profile_user_meta_permissions 
+from accounts.permissions import * 
 #serializer
 from accounts.serializer import *
 #django auth 
@@ -65,6 +65,11 @@ class RegisterView(APIView):
     
 # profile detail and update 
 class ProfileView(generics.RetrieveUpdateAPIView):
-    permission_classes =[IsAuthenticated,profile_user_meta_permissions]
+    permission_classes =[IsAuthenticated,profile_permissions]
     serializer_class = ProfileSerializer
     queryset = profile.objects.all()
+
+class UserMetaView(generics.RetrieveUpdateAPIView):
+    permission_classes =[IsAuthenticated,user_meta_permissions]
+    serializer_class = UserMetaSerializer
+    queryset = user_meta.objects.all()
