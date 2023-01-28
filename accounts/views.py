@@ -1,11 +1,11 @@
 #rest 
-from rest_framework import generics
+from rest_framework import generics,status
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 # jwt
 from rest_framework_simplejwt.tokens import RefreshToken
 #account 
-from accounts.models import User
+from accounts.models import User,profile,user_meta
 #serializer
 from accounts.serializer import LoginSerializer
 #django auth 
@@ -35,3 +35,25 @@ class LoginView(generics.GenericAPIView):
             return Response(data, status=status.HTTP_200_OK)
         else:
             return Response({'user':'wrong username or password'}, status=status.HTTP_200_OK)
+
+
+class RegisterView(APIView):
+    def post(self, request, *args, **kwargs):
+        email= request.data.get("email" ,"")
+        first_name= request.data.get("first_name" ,"")
+        last_name= request.data.get("last_name" ,"")
+        # create-user
+        def create_users():
+            user =User.objects.create_user(phone=request.data.get('phone'),password=request.data.get('password'),
+                email=email,first_name=first_name,last_name=last_name)
+            return user
+        if request.data.get('phone') == None or request.data.get('password') == None :
+            return Response({"detail": "please fill phone password"} , status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user_create = create_users()
+            profile_create = profile.objects.create(user =user_create)   
+            user_meta.objects.create(profile = profile_create)
+        except:
+            return Response({"detail"  : "phone exist"} , status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(request.data, status=status.HTTP_201_CREATED)
