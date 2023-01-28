@@ -4,7 +4,7 @@ from core.models import BaseModel
 from django.contrib.auth.models import AbstractUser,UserManager
 
 # json field 
-from json_field import JSONField
+from jsonfield import JSONField
 
 
 class MyUserManager(UserManager):
@@ -32,9 +32,13 @@ class profile(BaseModel):
     
     def __str__(self) -> str:
         return f'{self.user.phone ,self.username}'
+   
     
+def personal_theme_defualt():
+    return {"color": "black",
+            "theme": "white"}
 class user_meta(BaseModel):
     profile = models.OneToOneField(profile,on_delete=models.CASCADE)
-    personal_theme = jsonfield.JSONField()
+    personal_theme = JSONField("personal_theme", default=personal_theme_defualt)
     status = models.BooleanField(null=False,blank=True)
     last_seen =models.DateTimeField(auto_now_add=True)
