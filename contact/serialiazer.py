@@ -4,5 +4,5 @@ class ContactSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = contact
-        fields = ('user','contact','block')
+        fields = ('user','name','contact','block')
         only_read_field = ('user')
