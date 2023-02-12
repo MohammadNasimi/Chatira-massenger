@@ -8,7 +8,7 @@ from contact.serialiazer import ContactSerializer
 #models
 from contact.models import contact
 from accounts.models import profile
-
+from contact.permissions import update_contact_permissions
 
 class CreateContactView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -50,6 +50,6 @@ class FilterContactView(generics.ListAPIView):
     
 class UpdateContactView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ContactSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated,update_contact_permissions]
     queryset = contact.objects.all()
     
