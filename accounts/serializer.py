@@ -9,6 +9,7 @@ class LoginSerializer(serializers.ModelSerializer):
         read_only_fields = ('id','email', 'first_name', 'last_name')
         
 class ProfileSerializer(serializers.ModelSerializer):
+    user = LoginSerializer(read_only=True)
     class Meta:
         model = profile
         fields = ('id', 'user', 'username','bio', 'profile_pic')
