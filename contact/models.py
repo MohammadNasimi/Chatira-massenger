@@ -7,3 +7,5 @@ class contact(BaseModel):
     contact = models.ForeignKey(profile,on_delete=models.CASCADE,related_name='contact_set')
     block = models.BooleanField(default=False)
     
+    def __str__(self) -> str:
+        return self.user.user.phone
