@@ -12,11 +12,13 @@ from accounts.permissions import *
 from accounts.serializer import *
 #django auth 
 from django.contrib.auth import authenticate
-
-
+# drf-ysg for swagger import
+from drf_yasg.utils import swagger_auto_schema
+from accounts import docs
 # log in
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
+    @swagger_auto_schema(operation_description=docs.Log_in_Post,tags=['accounts'])
     def post(self, request, *args, **kwargs):
         if "password" not in request.data or "phone" not in request.data:
             return Response({"detail": "please send phone and password"} , status=status.HTTP_400_BAD_REQUEST)
@@ -43,6 +45,7 @@ class LoginView(generics.GenericAPIView):
 
 # register
 class RegisterView(APIView):
+    @swagger_auto_schema(operation_description=docs.Register_create_Post,tags=['accounts'])
     def post(self, request, *args, **kwargs):
         email= request.data.get("email" ,"")
         first_name= request.data.get("first_name" ,"")
@@ -68,8 +71,26 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     permission_classes =[IsAuthenticated,profile_permissions]
     serializer_class = ProfileSerializer
     queryset = profile.objects.all()
+    @swagger_auto_schema(operation_description=docs.profile_detail_Get,tags=['accounts'])
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    @swagger_auto_schema(operation_description=docs.profile_detail_put,tags=['accounts'])
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    @swagger_auto_schema(operation_description=docs.profile_detail_patch,tags=['accounts'])
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
 class UserMetaView(generics.RetrieveUpdateAPIView):
     permission_classes =[IsAuthenticated,user_meta_permissions]
     serializer_class = UserMetaSerializer
     queryset = user_meta.objects.all()
+    @swagger_auto_schema(operation_description=docs.usermeta_detail_Get,tags=['accounts'])
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    @swagger_auto_schema(operation_description=docs.usermeta_detail_put,tags=['accounts'])
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    @swagger_auto_schema(operation_description=docs.usermeta_detail_patch,tags=['accounts'])
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
