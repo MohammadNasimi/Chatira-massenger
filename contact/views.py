@@ -45,6 +45,7 @@ class FilterContactView(generics.ListAPIView):
 
     def get_queryset(self):
         search_query = self.request.GET.get('search',None)
+        print(search_query)
         profile_user = profile.objects.get(user_id = self.request.user.id)
         queryset = contact.objects.filter(user_id= profile_user.id) 
         if search_query :
@@ -59,4 +60,15 @@ class UpdateContactView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ContactSerializer
     permission_classes = [permissions.IsAuthenticated,update_contact_permissions]
     queryset = contact.objects.all()
-    
+    @swagger_auto_schema(operation_description=docs.contact_detail_get,tags=['contacts'])
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    @swagger_auto_schema(operation_description=docs.contact_detail_put,tags=['contacts'])
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    @swagger_auto_schema(operation_description=docs.contact_detail_patch,tags=['contacts'])
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+    @swagger_auto_schema(operation_description=docs.contact_detail_delete,tags=['contacts'])
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
