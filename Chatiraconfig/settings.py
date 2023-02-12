@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'core',
     'accounts',
     'contact',
+    'massege',
     'django_filters',
     'rest_framework',
     'rest_framework_simplejwt',
