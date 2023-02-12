@@ -4,7 +4,7 @@ from core.models import BaseModel
 from accounts.models import profile
 class contact(BaseModel):
     user = models.ForeignKey(profile,on_delete=models.CASCADE,related_name='user_set')
-    name_contract = models.CharField(max_length=20)
+    name_contact = models.CharField(max_length=20)
     contact = models.ForeignKey(profile,on_delete=models.CASCADE,related_name='contact_set')
     block = models.BooleanField(default=False)
     
