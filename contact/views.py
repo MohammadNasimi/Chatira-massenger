@@ -9,9 +9,13 @@ from contact.serialiazer import ContactSerializer
 from contact.models import contact
 from accounts.models import profile
 from contact.permissions import update_contact_permissions
+# drf-ysg for swagger import
+from drf_yasg.utils import swagger_auto_schema
+from contact import docs
 
 class CreateContactView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    @swagger_auto_schema(operation_description=docs.contact_create_post,tags=['contacts'])
     def post(self, request, *args, **kwargs):
         name = request.data.get("name" ,"")
         if request.data.get('phone') == None:
@@ -36,7 +40,7 @@ class FilterContactView(generics.ListAPIView):
     serializer_class = ContactSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name_contract','contact__user__phone']
+    search_fields = ['name_contact','contact__user__phone']
 
 
     def get_queryset(self):
@@ -44,9 +48,12 @@ class FilterContactView(generics.ListAPIView):
         profile_user = profile.objects.get(user_id = self.request.user.id)
         queryset = contact.objects.filter(user_id= profile_user.id) 
         if search_query :
-            queryset = queryset.filter(name_contract__icontains=search_query)
+            queryset = queryset.filter(name_contact__icontains=search_query)
             queryset = queryset.filter(contact__user__phone__icontains=search_query)
         return queryset
+    @swagger_auto_schema(operation_description=docs.contact_create_post,tags=['contacts'])
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
     
 class UpdateContactView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ContactSerializer
