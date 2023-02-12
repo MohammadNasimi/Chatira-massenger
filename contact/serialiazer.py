@@ -7,5 +7,5 @@ class ContactSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = contact
-        fields = ('user','name_contract','contact','block')
-        only_read_field = ('user')
+        fields = ('id','user','name_contract','contact','block')
+        only_read_field = ('id','user')
