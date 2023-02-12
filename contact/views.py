@@ -47,3 +47,9 @@ class FilterContactView(generics.ListAPIView):
             queryset = queryset.filter(name_contract__icontains=search_query)
             queryset = queryset.filter(contact__user__phone__icontains=search_query)
         return queryset
+    
+class UpdateContactView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ContactSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = contact.objects.all()
+    
