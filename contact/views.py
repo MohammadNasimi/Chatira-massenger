@@ -1,7 +1,8 @@
 #rest
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status,permissions
+from rest_framework import status,permissions,filters,generics
+
 #serializers
 from contact.serialiazer import ContactSerializer
 #models
@@ -30,3 +31,19 @@ class CreateContactView(APIView):
                                     ,contact_id=profile_contact.id)
 
         return Response(request.data, status=status.HTTP_201_CREATED)
+
+class FilterContactView(generics.ListAPIView):
+    serializer_class = ContactSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name_contract','contact__user__phone']
+
+
+    def get_queryset(self):
+        search_query = self.request.GET.get('search',None)
+        profile_user = profile.objects.get(user_id = self.request.user.id)
+        queryset = contact.objects.filter(user_id= profile_user.id) 
+        if search_query :
+            queryset = queryset.filter(name_contract__icontains=search_query)
+            queryset = queryset.filter(contact__user__phone__icontains=search_query)
+        return queryset
