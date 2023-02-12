@@ -40,6 +40,8 @@ model get:
 
 """
 profile_detail_put ="""
+every user just your profile could get 
+
 every user just your profile could update 
  
 
@@ -62,6 +64,8 @@ model post:
 }
 """
 usermeta_detail_Get ="""
+every user just your usermeta could get 
+
 add in url int pk usermeta get all data :
 model get:
 {
