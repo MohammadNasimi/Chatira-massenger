@@ -12,6 +12,7 @@ from accounts.models import profile
 class CreateContactView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request, *args, **kwargs):
+        name = request.data.get("name" ,"")
         if request.data.get('phone') == None:
             return Response({"detail": "please fill phone "} , status=status.HTTP_400_BAD_REQUEST)
         
@@ -21,7 +22,11 @@ class CreateContactView(APIView):
 
         except:
             return Response({"detail"  : "phone does not exist"} , status=status.HTTP_400_BAD_REQUEST)
-        
-        contact.objects.create(user_id = profile_user.id,contact_id=profile_contact)
+        try:
+            contact.objects.get(user_id = profile_user.id,contact_id=profile_contact.id)
+            return Response({"detail"  : "phone exist in your contact list"}, status=status.HTTP_201_CREATED)
+        except:
+            contact.objects.create(user_id = profile_user.id,name_contract= name
+                                    ,contact_id=profile_contact.id)
 
         return Response(request.data, status=status.HTTP_201_CREATED)
