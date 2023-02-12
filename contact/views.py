@@ -45,7 +45,6 @@ class FilterContactView(generics.ListAPIView):
 
     def get_queryset(self):
         search_query = self.request.GET.get('search',None)
-        print(search_query)
         profile_user = profile.objects.get(user_id = self.request.user.id)
         queryset = contact.objects.filter(user_id= profile_user.id) 
         if search_query :
