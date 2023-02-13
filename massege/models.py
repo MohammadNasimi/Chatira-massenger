@@ -26,4 +26,4 @@ class massege(BaseModel):
     reciver_delete =models.BooleanField(default=False)
 
     def __str__(self) -> str:
-        return {self.sender.user.phone,self.content_type}
+        return {self.conversation.sender.user.phone,self.content_type}
