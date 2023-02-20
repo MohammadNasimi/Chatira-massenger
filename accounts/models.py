@@ -22,9 +22,14 @@ class MyUserManager(UserManager):
 
 class User(AbstractUser):
     phone = models.CharField(max_length=11, null=True, blank=True, unique=True)
+    otp = models.PositiveIntegerField(blank=True,null=True)
+    otp_create_time = models.DateTimeField(auto_now=True)
     USERNAME_FIELD = 'phone'
+    REQUIRED_FIELDS = []
+    backend =''
+
+
     objects = MyUserManager()
-    
     def __str__(self) -> str:
         return f'{self.phone}'
     
