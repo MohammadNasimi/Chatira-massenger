@@ -20,8 +20,8 @@ class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
     @swagger_auto_schema(operation_description=docs.Log_in_Post,tags=['accounts'])
     def post(self, request, *args, **kwargs):
-        if "password" not in request.data or "phone" not in request.data:
-            return Response({"detail": "please send phone and password"} , status=status.HTTP_400_BAD_REQUEST)
+        if "phone" not in request.data:
+            return Response({"detail": "please send phone"} , status=status.HTTP_400_BAD_REQUEST)
         def get_token(user):
                 refresh = RefreshToken.for_user(user)
                 return {
@@ -29,7 +29,7 @@ class LoginView(generics.GenericAPIView):
                     'access':str(refresh.access_token)
                 }
 
-        user = authenticate(phone = request.data['phone'],password = request.data['password'])
+        user = authenticate(phone = request.data['phone'])
         if user :
             data = LoginSerializer(user).data
             token=get_token(user)
@@ -41,7 +41,7 @@ class LoginView(generics.GenericAPIView):
 
             return Response(data, status=status.HTTP_200_OK)
         else:
-            return Response({'user':'wrong username or password'}, status=status.HTTP_200_OK)
+            return Response({'user':'wrong username '}, status=status.HTTP_200_OK)
 
 # register
 class RegisterView(APIView):
@@ -52,11 +52,11 @@ class RegisterView(APIView):
         last_name= request.data.get("last_name" ,"")
         # create-user
         def create_users():
-            user =User.objects.create_user(phone=request.data.get('phone'),password=request.data.get('password'),
+            user =User.objects.create_user(phone=request.data.get('phone'),
                 email=email,first_name=first_name,last_name=last_name)
             return user
-        if request.data.get('phone') == None or request.data.get('password') == None :
-            return Response({"detail": "please fill phone password"} , status=status.HTTP_400_BAD_REQUEST)
+        if request.data.get('phone') == None  :
+            return Response({"detail": "please fill phone "} , status=status.HTTP_400_BAD_REQUEST)
         try:
             user_create = create_users()
             profile_create = profile.objects.create(user =user_create)   
