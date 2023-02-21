@@ -33,7 +33,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend', # This is the default that allows us to log in via username
+    'accounts.mybackend.phonebackend'
+]
 # Application definition
 
 INSTALLED_APPS = [
