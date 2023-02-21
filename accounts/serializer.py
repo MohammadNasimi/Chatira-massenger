@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from accounts.models import User,profile,user_meta
 class LoginSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    # password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'phone', 'password','email', 'first_name', 'last_name')
+        fields = ('id', 'phone','email', 'first_name', 'last_name')
         read_only_fields = ('id','email', 'first_name', 'last_name')
         
 class ProfileSerializer(serializers.ModelSerializer):
