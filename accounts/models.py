@@ -26,7 +26,8 @@ class User(AbstractUser):
     otp_create_time = models.DateTimeField(auto_now=True)
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = []
-    backend =''
+    backend = 'accounts.mybackend.phonebackend'
+
 
 
     objects = MyUserManager()
